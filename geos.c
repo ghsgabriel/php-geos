@@ -150,9 +150,11 @@ static void errorHandler(const char *fmt, ...)
     va_end(args);
 
     /* TODO: use a GEOSException ? */
-    zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C),
-        1 TSRMLS_CC, "%s", message);
-
+    #if PHP_VERSION_ID < 80500
+        zend_throw_exception_ex(zend_exception_get_default(TSRMLS_C), 1 TSRMLS_CC, "%s", message);
+    #else
+        zend_throw_exception_ex(zend_ce_exception, 1 TSRMLS_CC, "%s", message);
+    #endif
 }
 
 typedef struct Proxy_t {
